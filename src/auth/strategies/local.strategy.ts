@@ -2,6 +2,8 @@ import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
+import * as bcrypt from 'bcrypt';
+
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -10,17 +12,17 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
         super({ usernameField: 'email' });
     }
 
-    async validate(email: string, password: string): Promise<any> {
-
-        const user = await this.userService.findOne(email);
+    async validate(email: string, plainPassword: string): Promise<any> {
+        const user = await this.userService.findOneActiveByEmail(email);
         
         if (!user) {
             throw new UnauthorizedException("Invalid email");
         }
-        if (user.password !== password) {
+        if (!await bcrypt.compare(plainPassword, user.password)) {
             throw new UnauthorizedException("Invalid password");
         }
 
-        return user;
+        const { password, ...userWithoutPass } = user
+        return userWithoutPass;
     }
 }

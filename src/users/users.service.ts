@@ -1,39 +1,81 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { User } from './user.entity';
-import { Role } from '../auth/roles/role.enum';
 import { CreateUserRequest } from './requests/create-user-request';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
-const user1 = new User("Marko", "Markovic", "mare@email.com", "maremdma"); user1.roles = [Role.User];
-const user2 = new User("Darko", "Darkovic", "dare@email.com", "dare123"); user2.roles = [Role.User];
-const user3 = new User("Admin", "Admin", "admin@email.com", "adminadmin"); user3.roles = [Role.Admin];
+import * as bcrypt from 'bcrypt';
 
-const users: User[] = [user1, user2, user3];
-                        
 
 @Injectable()
 export class UsersService {
 
-    getAll() {
-        return users;
+    constructor(
+        @InjectRepository(User)
+        private usersRepository: Repository<User>,
+    ) {}
+
+    async createUser(data: CreateUserRequest): Promise<User> {
+        await this.checkEmail(data.email)
+
+        const hashedPassword = await bcrypt.hash(data.password, 10);
+        const userData = {
+            ...data,
+            password: hashedPassword,
+        }
+        const userEntity = await this.usersRepository.save(userData);
+        return userEntity
     }
 
-    findOne(email: string) {
-        const existingUser = users.find(user => user.email === email)
-        // if (!existingUser) {
-        //     throw new BadRequestException('User with this email does not exists');
-        // }
-        return existingUser;
-    } 
+    async findAll(isActive?: boolean): Promise<User[]> {
+        if (isActive) {
+            return this.usersRepository.find({
+                where: {
+                    isActive,
+                },
+            });
+        }
 
-
-    createUser(data: CreateUserRequest) {
-        users.push(new User(data.firstname, data.lastname, data.email, data.password))
+        return this.usersRepository.find();
     }
 
-    checkEmail({ id, email }: { id?: number; email?: string }) {
-        const existingUser = users.find(user => user.email === email);
-        if (!existingUser) {
+    async findOne(id: number): Promise<User> {
+        return this.usersRepository.findOne({
+            where: {
+              id,
+            },
+        });
+    }
+
+    async findOneByEmail(email: string): Promise<User> {
+        return this.usersRepository.findOne({
+            where: {
+              email,
+            },
+        });
+    }
+
+    async findOneActive(id: number): Promise<User> {
+        return this.usersRepository.findOne({
+            where: {
+              id,
+              isActive: true,
+            },
+        });
+    }
+
+    async findOneActiveByEmail(email: string): Promise<User> {
+        return this.usersRepository.findOneBy({
+            email,
+            isActive: true,
+        });
+    }
+
+    async checkEmail(email: string) {
+        // check if email is free
+        const existingUser = await this.findOneByEmail(email);
+        if (existingUser) {
             throw new BadRequestException('Email already in use');
         }
     }

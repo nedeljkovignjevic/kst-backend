@@ -11,18 +11,21 @@ export class UsersController {
 
     constructor(private userService: UsersService) {}
 
-    @Post('/')
-    async createUser(@Body() data: CreateUserRequest) {
-        console.log(data);
-        this.userService.createUser(data);
-    }
-    
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(Role.Admin)
+    @Post('/')
+    async createUser(@Body() data: CreateUserRequest) {
+
+        this.userService.createUser(data);
+    }
+
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin, Role.User)
     @Get('/')
     async getAllUsers() {
-        const users = this.userService.getAll();
-        return users;
+        return this.userService.findAll(true);
     }
+
+
 
 }

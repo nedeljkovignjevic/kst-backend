@@ -18,22 +18,24 @@ export class AuthController {
     @Post('login')
     async login(@Request() req: Req) {
         const user = req.user as User;
+        const { password, ...userWithoutPass } = user;
+
         const payload = {
-            ...user,
-            sub: user.email,
+            ...userWithoutPass,
+            sub: userWithoutPass.id,
         };
         const accessToken = this.jwtService.sign(payload);
 
         return {
             accessToken,
-            user,
+            userWithoutPass,
         };
     }
 
     @UseGuards(JwtAuthGuard)
     @Get('me')
     async getMe(@Request() req: Req) {
-        return this.userService.findOne((req.user as any).email)
+        return await this.userService.findOneActiveByEmail((req.user as any).email)
     }
 
 
