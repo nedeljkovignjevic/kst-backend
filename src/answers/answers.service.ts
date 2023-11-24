@@ -1,0 +1,24 @@
+import { Injectable } from '@nestjs/common';
+import { Answer } from './answer.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
+@Injectable()
+export class AnswersService {
+
+    constructor(
+        @InjectRepository(Answer)
+        private answersRepository: Repository<Answer>,
+    ) {}
+
+    async findOne(id: number): Promise<Answer> {
+        return this.answersRepository.findOne({
+            where: {
+              id,
+            },
+        });
+    }
+
+}
+
+

@@ -21,6 +21,5 @@ export class StudentAnswer {
     @OneToOne(() => Answer)
     @JoinColumn()
     answer: Answer;
-
 }
 

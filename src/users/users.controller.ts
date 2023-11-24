@@ -22,7 +22,7 @@ export class UsersController {
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Get('/')
     async getAllUsers() {
-        return this.userService.findAll(true);
+        return await this.userService.findAll(true);
     }
 
 

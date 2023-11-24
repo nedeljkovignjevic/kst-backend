@@ -8,7 +8,6 @@ import { AuthModule } from './auth/auth.module';
 import jwt from './config/jwt';
 import db from './config/db';
 
-import { CoursesModule } from './courses/courses.module';
 import { TestsModule } from './tests/tests.module';
 import { QuestionsModule } from './questions/questions.module';
 import { AnswersModule } from './answers/answers.module';
@@ -32,7 +31,6 @@ import { StudentAnswersModule } from './student-answers/student-answers.module';
 
     UsersModule, 
     AuthModule, 
-    CoursesModule, 
     TestsModule, 
     QuestionsModule, 
     AnswersModule, 
