@@ -20,7 +20,7 @@ export class Course {
 
     @ManyToMany(() => User)
     @JoinTable()
-    proffesors: User[]
+    professors: User[]
 
     @Column({ type: 'boolean', default: 1 })
     isActive: boolean;

@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateCourseRequest } from './requests/create-course-request';
 import { UsersService } from 'src/users/users.service';
 import { Role } from 'src/auth/roles/role.enum';
+import { AddUserToCourseRequest } from './requests/add-user-to-course-request';
 
 @Injectable()
 export class CoursesService {
@@ -20,10 +21,10 @@ export class CoursesService {
         return this.coursesRepository.save(data);
     }
 
-    async addStudent(id: number, email: string) {
-        const course = await this.checkIfCourseExists(id);
+    async addStudent(data: AddUserToCourseRequest) {
+        const course = await this.findCourseByIdWithStudents(data.courseId);
 
-        const user = await this.usersService.findOneActiveByEmail(email);
+        const user = await this.usersService.findOneActiveByEmail(data.userEmail);
         if (!user) {
             throw new BadRequestException("Invalid email");
         }
@@ -35,10 +36,10 @@ export class CoursesService {
         return this.coursesRepository.save(course);
     }
 
-    async addProfessor(id: number, email: string) {
-        const course = await this.checkIfCourseExists(id);
+    async addProfessor(data: AddUserToCourseRequest) {
+        const course = await this.findCourseByIdWithProfessors(data.courseId);
 
-        const user = await this.usersService.findOneActiveByEmail(email);
+        const user = await this.usersService.findOneActiveByEmail(data.userEmail);
         if (!user) {
             throw new BadRequestException("Invalid email");
         }
@@ -46,7 +47,7 @@ export class CoursesService {
             throw new BadRequestException("User is not a professor");
         }
 
-        course.proffesors.push(user);
+        course.professors.push(user);
         return this.coursesRepository.save(course);
     }
 
@@ -67,6 +68,33 @@ export class CoursesService {
         }
 
         return course.tests;
+    }
+
+    async findCourseByIdWithStudents(id: number) {
+        const course = await this.coursesRepository.findOne({
+            where: {
+                id,
+            },
+            relations: ['students'],
+        })
+        if (!course) {
+            throw new BadRequestException("Course does not exists");
+        }
+        return course;
+
+    }
+
+    async findCourseByIdWithProfessors(id: number) {
+        const course = await this.coursesRepository.findOne({
+            where: {
+                id,
+            },
+            relations: ['professors'],
+        })
+        if (!course) {
+            throw new BadRequestException("Course does not exists");
+        }
+        return course;
     }
 
     private async checkIfCourseExists(id: number) {

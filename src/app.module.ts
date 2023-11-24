@@ -13,6 +13,7 @@ import { QuestionsModule } from './questions/questions.module';
 import { AnswersModule } from './answers/answers.module';
 import { StudentTestsModule } from './student-tests/student-tests.module';
 import { StudentAnswersModule } from './student-answers/student-answers.module';
+import { CoursesModule } from './courses/courses.module';
 
 
 @Module({
@@ -31,6 +32,7 @@ import { StudentAnswersModule } from './student-answers/student-answers.module';
 
     UsersModule, 
     AuthModule, 
+    CoursesModule,
     TestsModule, 
     QuestionsModule, 
     AnswersModule, 

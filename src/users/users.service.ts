@@ -71,9 +71,11 @@ export class UsersService {
     }
 
     async findOneActiveByEmail(email: string): Promise<User> {
-        return this.usersRepository.findOneBy({
-            email,
-            isActive: true,
+        return this.usersRepository.findOne({
+            where: {
+              email,
+              isActive: true,
+            },
         });
     }
 
