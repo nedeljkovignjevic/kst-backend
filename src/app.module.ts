@@ -8,8 +8,12 @@ import { AuthModule } from './auth/auth.module';
 import jwt from './config/jwt';
 import db from './config/db';
 
-import { GalleriesModule } from './galleries/galleries.module';
-import { CommentsModule } from './comments/comments.module';
+import { CoursesModule } from './courses/courses.module';
+import { TestsModule } from './tests/tests.module';
+import { QuestionsModule } from './questions/questions.module';
+import { AnswersModule } from './answers/answers.module';
+import { StudentTestsModule } from './student-tests/student-tests.module';
+import { StudentAnswersModule } from './student-answers/student-answers.module';
 
 
 @Module({
@@ -28,7 +32,12 @@ import { CommentsModule } from './comments/comments.module';
 
     UsersModule, 
     AuthModule, 
-    GalleriesModule, CommentsModule
+    CoursesModule, 
+    TestsModule, 
+    QuestionsModule, 
+    AnswersModule, 
+    StudentTestsModule, 
+    StudentAnswersModule
   ],
 })
 export class AppModule {}
