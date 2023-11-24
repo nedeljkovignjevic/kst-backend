@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import * as bcrypt from 'bcrypt';
+import { Role } from 'src/auth/roles/role.enum';
 
 
 @Injectable()
@@ -24,8 +25,12 @@ export class UsersService {
             ...data,
             password: hashedPassword,
         }
-        const userEntity = await this.usersRepository.save(userData);
-        return userEntity
+
+        if (!userData.roles) {
+            userData.roles = [Role.Student];
+        }
+        
+        return this.usersRepository.save(userData);
     }
 
     async findAll(isActive?: boolean): Promise<User[]> {
@@ -78,6 +83,14 @@ export class UsersService {
         if (existingUser) {
             throw new BadRequestException('Email already in use');
         }
+    }
+
+    async checkIfUserExists(email: string) {
+        const existingUser = await this.findOneActiveByEmail(email);
+        if (!existingUser) {
+            throw new BadRequestException('User does not exists');
+        }
+        return existingUser;
     }
 
 }

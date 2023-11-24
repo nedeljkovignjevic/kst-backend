@@ -23,7 +23,6 @@ export class User {
     password: string;
 
     @Column({ type: 'enum', enum: Role, default: Role.Student })
-    @IsEnum(Role, { each: true })     
     roles: Role[];
 
     @OneToMany(type => StudentTest, studentTest => studentTest.student)
