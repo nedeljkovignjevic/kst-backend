@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Answer } from './answer.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Question } from 'src/questions/question.entity';
 
 @Injectable()
 export class AnswersService {
@@ -17,6 +18,10 @@ export class AnswersService {
               id,
             },
         });
+    }
+
+    async save(answer: Answer) {
+        return this.answersRepository.save(answer);
     }
 
 }

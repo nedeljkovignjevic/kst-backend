@@ -13,7 +13,6 @@ export class CoursesService {
     constructor(
         @InjectRepository(Course)
         private coursesRepository: Repository<Course>,
-
         private usersService: UsersService,
     ) {}
 
@@ -56,13 +55,21 @@ export class CoursesService {
         return this.coursesRepository.find();
     }
 
-    async findTestsForCourse(id: number) {
+    async findOne(id: number) {
+        return this.coursesRepository.findOne({
+            where: {
+                id,
+            }
+        });
+    }
+
+    async findTestsForCourse(courseId: number) {
         const course = await this.coursesRepository.findOne({
             where: {
-                id
-            }
+                id: courseId,
+            },
+            relations: ['tests', 'tests.questions', 'tests.questions.answers'],
         })
-
         if (!course) {
             throw new BadRequestException("Course does not exists");
         }
@@ -84,7 +91,7 @@ export class CoursesService {
 
     }
 
-    async findCourseByIdWithProfessors(id: number) {
+    private async findCourseByIdWithProfessors(id: number) {
         const course = await this.coursesRepository.findOne({
             where: {
                 id,

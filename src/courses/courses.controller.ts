@@ -10,7 +10,9 @@ import { AddUserToCourseRequest } from './requests/add-user-to-course-request';
 @Controller('courses')
 export class CoursesController {
 
-    constructor(private coursesService: CoursesService) {}
+    constructor(
+        private coursesService: CoursesService,
+    ) {}
 
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Get('/')
@@ -25,18 +27,24 @@ export class CoursesController {
         return await this.coursesService.createCourse(data);
     }
 
-    @Put('/add-student')
-    async addStudent(@Body() data: AddUserToCourseRequest) {
-        return await this.coursesService.addStudent(data);
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin, Role.Professor)
+    @Get('/:id/tests')
+    async getTestsForCourse(@Param('id', ParseIntPipe) id: number) {
+        return await this.coursesService.findTestsForCourse(id);
     }
+
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin,)
     @Put('/add-professor')
     async addProfessor(@Body() data: AddUserToCourseRequest) {
         return await this.coursesService.addProfessor(data);
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)
-    @Get('/:id')
-    async getTestsForCourse(@Param('id', ParseIntPipe) id: number) {
-        return await this.coursesService.findTestsForCourse(id);
+    @Roles(Role.Admin, Role.Professor)
+    @Put('/add-student')
+    async addStudent(@Body() data: AddUserToCourseRequest) {
+        return await this.coursesService.addStudent(data);
     }
 }

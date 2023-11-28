@@ -18,4 +18,8 @@ export class QuestionsService {
             },
         });
     }
+
+    async save(question: Question): Promise<Question> {
+        return this.questionsRepository.save(question);
+    }
 }
