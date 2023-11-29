@@ -63,7 +63,7 @@ export class CoursesService {
         });
     }
 
-    async findTestsForCourse(courseId: number) {
+    async findTestsForCourse(courseId: number, authUser) {
         const course = await this.coursesRepository.findOne({
             where: {
                 id: courseId,
@@ -91,7 +91,7 @@ export class CoursesService {
 
     }
 
-    private async findCourseByIdWithProfessors(id: number) {
+    async findCourseByIdWithProfessors(id: number) {
         const course = await this.coursesRepository.findOne({
             where: {
                 id,

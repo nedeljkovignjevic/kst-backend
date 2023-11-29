@@ -6,6 +6,7 @@ import { Roles } from 'src/auth/roles/roles.decorator';
 import { Role } from 'src/auth/roles/role.enum';
 import { CreateCourseRequest } from './requests/create-course-request';
 import { AddUserToCourseRequest } from './requests/add-user-to-course-request';
+import { UserInCourse } from 'src/auth/guards/user-in-course.guard';
 
 @Controller('courses')
 export class CoursesController {
@@ -27,11 +28,11 @@ export class CoursesController {
         return await this.coursesService.createCourse(data);
     }
 
-    @UseGuards(JwtAuthGuard, RolesGuard)
+    @UseGuards(JwtAuthGuard, RolesGuard, UserInCourse)
     @Roles(Role.Admin, Role.Professor, Role.Student)
     @Get('/:id/tests')
-    async getTestsForCourse(@Param('id', ParseIntPipe) id: number) {
-        return await this.coursesService.findTestsForCourse(id);
+    async getTestsForCourse(@Param('id', ParseIntPipe) id: number, @Request() { user }) {
+        return await this.coursesService.findTestsForCourse(id, user);
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)
