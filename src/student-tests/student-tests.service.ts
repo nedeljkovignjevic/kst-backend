@@ -2,11 +2,11 @@ import { BadRequestException, Injectable, ParseIntPipe } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { StudentTest } from './student-test.entity';
-import { CreateStudentTestRequest } from './requests/create-student-test-request';
+import { CreateStudentAnswerRequest, CreateStudentTestRequest } from './requests/create-student-test-request';
 import { TestsService } from 'src/tests/tests.service';
-import { CreateStudentAnswerRequest } from './requests/create-student-answer-request';
 import { QuestionsService } from 'src/questions/questions.service';
 import { AnswersService } from 'src/answers/answers.service';
+import { Test } from 'src/tests/test.entity';
 
 @Injectable()
 export class StudentTestsService {
@@ -21,20 +21,23 @@ export class StudentTestsService {
     ) {}
 
     async createStudentTest(data: CreateStudentTestRequest, authUser) {
-        const test = await this.testsService.findOne(data.test_id);
+        const test = await this.testsService.findOneWithQuestions(data.test_id);
         if (!test) {
             throw new BadRequestException("Test does not exists");
         }
+        console.log(test);
+        console.log(data);
+        await this.checkIfAllQuestionsAnswered(test, data);
 
         const studentAnswers = [];
-        for (let el of data.studentAnswers) {
-            const { question, answer } = await this.checkStudentAnswer(test.id, el);
+        data.studentAnswers.forEach(async (answerRequest) => {
+            const { question, answer } = await this.checkStudentAnswer(test.id, answerRequest);
             studentAnswers.push( {
                 test,
                 question,
                 answer
             } )
-        }
+        })
 
         const studentTest = {
             title: data.title,
@@ -47,7 +50,8 @@ export class StudentTestsService {
     }
 
     private async checkStudentAnswer(test_id: number, data: CreateStudentAnswerRequest) {
-        const question = await this.questionsService.findOne(data.question_id);
+        const question = await this.questionsService.findOneWithTest(data.question_id);
+
         if (!question) {
             throw new BadRequestException("Question does not exists");
         }
@@ -55,7 +59,7 @@ export class StudentTestsService {
             throw new BadRequestException("Test and question mismatch");
         }
 
-        const answer = await this.answersService.findOne(data.answer_id);
+        const answer = await this.answersService.findOneWithQuestion(data.answer_id);
         if (!answer) {
             throw new BadRequestException("Answer does not exists");
         }
@@ -66,5 +70,14 @@ export class StudentTestsService {
         return { question, answer };
     }
 
+    private async checkIfAllQuestionsAnswered(test: Test, data: CreateStudentTestRequest) {
+        const questionIds: number[] = data.studentAnswers.map(a => a.question_id);
+        console.log(typeof(questionIds[1]));
+        const allQuestionsAnswered = test.questions.every(q => questionIds.includes(q.id));
+        
+        if (!allQuestionsAnswered) {
+            throw new BadRequestException("All questions from test should be answered");
+        }
 
+    }
 }

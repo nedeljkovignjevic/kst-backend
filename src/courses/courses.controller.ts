@@ -28,7 +28,7 @@ export class CoursesController {
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles(Role.Admin, Role.Professor)
+    @Roles(Role.Admin, Role.Professor, Role.Student)
     @Get('/:id/tests')
     async getTestsForCourse(@Param('id', ParseIntPipe) id: number) {
         return await this.coursesService.findTestsForCourse(id);

@@ -30,6 +30,17 @@ export class TestsService {
         });
     }
 
+    async findOneWithQuestions(id: number): Promise<Test> {
+        return this.testsRepository.findOne({
+            relations: {
+                questions: true,
+            },
+            where: {
+              id,
+            },
+        });
+    }
+ 
     async findAll() {
         return this.testsRepository.find({
             relations: ['questions', 'questions.answers']

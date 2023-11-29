@@ -1,5 +1,15 @@
 import { IsEmail, IsNotEmpty, IsNumber, IsString, Matches, MinLength } from 'class-validator';
-import { CreateStudentAnswerRequest } from './create-student-answer-request';
+
+export class CreateStudentAnswerRequest {
+    
+    @IsNumber()
+    @IsNotEmpty()
+    question_id: number;
+
+    @IsNumber()
+    @IsNotEmpty()
+    answer_id: number;
+}
 
 export class CreateStudentTestRequest {
     

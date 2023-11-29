@@ -19,6 +19,17 @@ export class QuestionsService {
         });
     }
 
+    async findOneWithTest(id: number): Promise<Question> {
+        return this.questionsRepository.findOne({
+            relations: {
+                test: true,
+            },
+            where: {
+              id,
+            },
+        });
+    }
+ 
     async save(question: Question): Promise<Question> {
         return this.questionsRepository.save(question);
     }
