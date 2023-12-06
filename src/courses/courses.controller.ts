@@ -4,8 +4,8 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/roles/roles.decorator';
 import { Role } from 'src/auth/roles/role.enum';
-import { CreateCourseRequest } from './requests/create-course-request';
-import { AddUserToCourseRequest } from './requests/add-user-to-course-request';
+import { CreateCourseRequest } from './requests/create-course-request.dto';
+import { AddUserToCourseRequest } from './requests/add-user-to-course-request.dto';
 import { UserInCourse } from 'src/auth/guards/user-in-course.guard';
 
 @Controller('courses')
@@ -16,9 +16,10 @@ export class CoursesController {
     ) {}
 
     @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin, Role.Professor, Role.Student)
     @Get('/')
-    async getAllCourses() {
-        return await this.coursesService.findAll();
+    async getAllCourses(@Request() { user }) {
+        return await this.coursesService.findAllCoursesForUser(user);
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)

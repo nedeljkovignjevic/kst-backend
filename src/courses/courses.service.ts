@@ -2,10 +2,10 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { Course } from './course.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateCourseRequest } from './requests/create-course-request';
+import { CreateCourseRequest } from './requests/create-course-request.dto';
 import { UsersService } from 'src/users/users.service';
 import { Role } from 'src/auth/roles/role.enum';
-import { AddUserToCourseRequest } from './requests/add-user-to-course-request';
+import { AddUserToCourseRequest } from './requests/add-user-to-course-request.dto';
 
 @Injectable()
 export class CoursesService {
@@ -18,6 +18,10 @@ export class CoursesService {
 
     async createCourse(data: CreateCourseRequest) {
         return this.coursesRepository.save(data);
+    }
+
+    async findAllCoursesForUser(authUser) {
+        return [];
     }
 
     async addStudent(data: AddUserToCourseRequest) {

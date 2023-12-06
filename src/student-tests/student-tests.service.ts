@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, ParseIntPipe } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { StudentTest } from './student-test.entity';
-import { CreateStudentAnswerRequest, CreateStudentTestRequest } from './requests/create-student-test-request';
+import { CreateStudentAnswerRequest, CreateStudentTestRequest } from './requests/create-student-test-request.dto';
 import { TestsService } from 'src/tests/tests.service';
 import { QuestionsService } from 'src/questions/questions.service';
 import { AnswersService } from 'src/answers/answers.service';

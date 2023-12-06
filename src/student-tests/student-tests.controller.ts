@@ -4,7 +4,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Role } from 'src/auth/roles/role.enum';
 import { Roles } from 'src/auth/roles/roles.decorator';
-import { CreateStudentTestRequest } from './requests/create-student-test-request';
+import { CreateStudentTestRequest } from './requests/create-student-test-request.dto';
 
 @Controller('student-tests')
 export class StudentTestsController {
