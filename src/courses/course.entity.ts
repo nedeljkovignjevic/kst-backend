@@ -8,7 +8,7 @@ export class Course {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ nullable: false })
+    @Column({ nullable: false, unique: true })
     title: string;
 
     @OneToMany(type => Test, test => test.course)

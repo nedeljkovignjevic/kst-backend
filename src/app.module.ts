@@ -14,6 +14,7 @@ import { AnswersModule } from './answers/answers.module';
 import { StudentTestsModule } from './student-tests/student-tests.module';
 import { StudentAnswersModule } from './student-answers/student-answers.module';
 import { CoursesModule } from './courses/courses.module';
+import { SeedModule } from './seed/seed.module';
 
 
 @Module({
@@ -37,7 +38,8 @@ import { CoursesModule } from './courses/courses.module';
     QuestionsModule, 
     AnswersModule, 
     StudentTestsModule, 
-    StudentAnswersModule
+    StudentAnswersModule, 
+    SeedModule
   ],
 })
 export class AppModule {}

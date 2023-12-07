@@ -3,6 +3,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { SeedService } from './seed/seed.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -19,6 +20,10 @@ async function bootstrap() {
     }),
   );
 
+  // Seed the database
+  await app.get(SeedService).seed();
+
+  // Add Swagger documentation on /docs
   const config = new DocumentBuilder()
     .setTitle('KST Backend')
     .setDescription('KST Backend description')
@@ -30,4 +35,5 @@ async function bootstrap() {
 
   await app.listen(3000);
 }
+
 bootstrap();

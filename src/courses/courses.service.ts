@@ -6,6 +6,7 @@ import { CreateCourseRequest } from './requests/create-course-request.dto';
 import { UsersService } from 'src/users/users.service';
 import { Role } from 'src/auth/roles/role.enum';
 import { AddUserToCourseRequest } from './requests/add-user-to-course-request.dto';
+import { User } from 'src/users/user.entity';
 
 @Injectable()
 export class CoursesService {
@@ -22,6 +23,20 @@ export class CoursesService {
 
     async findAllCoursesForUser(authUser) {
         return [];
+    }
+
+    async findCoursesForUser(user: User) {
+
+        const userId = user.id;
+
+        const courses = await this.coursesRepository
+            .createQueryBuilder('course')
+            .leftJoinAndSelect('course.students', 'student')
+            .leftJoinAndSelect('course.professors', 'professor')
+            .where('student.id = :userId OR professor.id = :userId', { userId })
+            .getMany();
+  
+      return courses;
     }
 
     async addStudent(data: AddUserToCourseRequest) {

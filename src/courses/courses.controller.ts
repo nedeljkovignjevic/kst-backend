@@ -29,6 +29,13 @@ export class CoursesController {
         return await this.coursesService.createCourse(data);
     }
 
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Professor, Role.Student)
+    @Get('/all')
+    async getCoursesForUser(@Request() { user }) {
+        return await this.coursesService.findCoursesForUser(user);
+    }
+
     @UseGuards(JwtAuthGuard, RolesGuard, UserInCourse)
     @Roles(Role.Admin, Role.Professor, Role.Student)
     @Get('/:id/tests')
