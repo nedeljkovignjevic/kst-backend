@@ -23,6 +23,12 @@ async function bootstrap() {
   // Seed the database
   await app.get(SeedService).seed();
 
+  app.enableCors({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  });
+
   // Add Swagger documentation on /docs
   const config = new DocumentBuilder()
     .setTitle('KST Backend')
