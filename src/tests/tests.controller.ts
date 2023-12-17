@@ -27,6 +27,8 @@ export class TestsController {
         return await this.testsService.createTest(data, user);
     }
 
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin, Role.Professor, Role.Student)
     @Get('/:id')
     async getOneTest(@Param('id', ParseIntPipe) id: number) {
         return await this.testsService.findOneWithQuestions(id);
