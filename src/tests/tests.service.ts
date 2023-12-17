@@ -31,14 +31,18 @@ export class TestsService {
     }
 
     async findOneWithQuestions(id: number): Promise<Test> {
-        return this.testsRepository.findOne({
-            relations: {
-                questions: true,
-            },
+        const test = await this.testsRepository.findOne({
+            relations: ['questions', 'questions.answers'],
             where: {
               id,
             },
         });
+
+        if (!test) {
+            throw new BadRequestException("Test id does not exists");
+        }
+
+        return test;
     }
  
     async findAll() {
