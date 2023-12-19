@@ -9,6 +9,7 @@ import { Answer } from 'src/answers/answer.entity';
 
 import { QuestionsService } from 'src/questions/questions.service';
 import { Question } from 'src/questions/question.entity';
+import { CreateKSTGraphDTO } from './requests/create-kst-graph.dto';
 
 @Injectable()
 export class TestsService {
@@ -74,7 +75,7 @@ export class TestsService {
             createdById: authUser.id,
         });
 
-        await data.questions.forEach(async questionDTO => {
+        data.questions.forEach(async questionDTO => {
             const q = new Question();
             q.test = createdTest;
             q.text = questionDTO.text;
@@ -88,6 +89,10 @@ export class TestsService {
                 await this.answersService.save(a);
             })
         })
+
+    }
+
+    async createKSTGraph(data: CreateKSTGraphDTO, authUser) {
 
     }
 

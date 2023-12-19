@@ -11,13 +11,19 @@ export class KSTNode {
     @Column({ nullable: false })
     text: string;
 
+    @Column({ nullable: false })
+    x: number;
+
+    @Column({ nullable: false })
+    y: number;
+
     @OneToMany(type => Question, question => question.node)
-    questions: Question[]
+    questions: Question[];
 
     @OneToMany(type => KSTRelation, relation => relation.source)
-    sourceRelations: KSTRelation[]
+    sourceRelations: KSTRelation[];
 
     @OneToMany(type => KSTRelation, relation => relation.destination)
-    destinationRelations: KSTRelation[]
+    destinationRelations: KSTRelation[];
 }
 

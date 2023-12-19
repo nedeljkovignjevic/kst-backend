@@ -8,9 +8,9 @@ export class KSTRelation {
     id: number;
 
     @ManyToOne(() => KSTNode, (node) => node.sourceRelations)
-    source: KSTNode
+    source: KSTNode;
 
     @ManyToOne(() => KSTNode, (node) => node.destinationRelations)
-    destination: KSTNode
+    destination: KSTNode;
 }
 
