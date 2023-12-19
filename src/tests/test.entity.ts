@@ -1,7 +1,7 @@
 import { Question } from "../questions/question.entity";
 import { Course } from "../courses/course.entity";
 import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { StudentTest } from "src/student-tests/student-test.entity";
+import { StudentTest } from "../student-tests/student-test.entity";
 
 @Entity()
 export class Test {

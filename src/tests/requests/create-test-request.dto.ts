@@ -1,6 +1,4 @@
 import { IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { Answer } from 'src/answers/answer.entity';
-import { Question } from 'src/questions/question.entity';
 
 class AnswerDTO {
 

@@ -5,10 +5,10 @@ import { Repository, DataSource } from 'typeorm';
 import { CreateTestRequest } from './requests/create-test-request.dto';
 import { CoursesService } from 'src/courses/courses.service';
 import { AnswersService } from 'src/answers/answers.service';
-import { Question } from 'src/questions/question.entity';
 import { Answer } from 'src/answers/answer.entity';
 
 import { QuestionsService } from 'src/questions/questions.service';
+import { Question } from 'src/questions/question.entity';
 
 @Injectable()
 export class TestsService {
