@@ -48,11 +48,29 @@
     
 
 
+    <!-- http://www.semanticweb.org/blast/ontologies/2023/11/semWebOntology#does -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/blast/ontologies/2023/11/semWebOntology#does">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/blast/ontologies/2023/11/semWebOntology#Student"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/blast/ontologies/2023/11/semWebOntology#Test"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- http://www.semanticweb.org/blast/ontologies/2023/11/semWebOntology#givesAnswers -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/blast/ontologies/2023/11/semWebOntology#givesAnswers">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/blast/ontologies/2023/11/semWebOntology#Student"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/blast/ontologies/2023/11/semWebOntology#Answer"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/blast/ontologies/2023/11/semWebOntology#has -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/blast/ontologies/2023/11/semWebOntology#has">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/blast/ontologies/2023/11/semWebOntology#Course"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/blast/ontologies/2023/11/semWebOntology#Test"/>
     </owl:ObjectProperty>
     
 
