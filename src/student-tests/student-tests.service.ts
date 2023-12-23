@@ -25,24 +25,22 @@ export class StudentTestsService {
         if (!test) {
             throw new BadRequestException("Test does not exists");
         }
-        console.log(test);
-        console.log(data);
+
         await this.checkIfAllQuestionsAnswered(test, data);
 
-        const studentAnswers = [];
-        data.studentAnswers.forEach(async (answerRequest) => {
+        const studentAnswers = await Promise.all(data.studentAnswers.map(async (answerRequest) => {
             const { question, answer } = await this.checkStudentAnswer(test.id, answerRequest);
-            studentAnswers.push( {
+            return {
                 test,
                 question,
                 answer
-            } )
-        })
+            };
+        }));
 
         const studentTest = {
             title: data.title,
-            test,
-            studentAnswers,
+            test: test,
+            studentAnswers: studentAnswers,
             student: authUser
         }
 
@@ -72,9 +70,8 @@ export class StudentTestsService {
 
     private async checkIfAllQuestionsAnswered(test: Test, data: CreateStudentTestRequest) {
         const questionIds: number[] = data.studentAnswers.map(a => a.question_id);
-        console.log(typeof(questionIds[1]));
         const allQuestionsAnswered = test.questions.every(q => questionIds.includes(q.id));
-        
+
         if (!allQuestionsAnswered) {
             throw new BadRequestException("All questions from test should be answered");
         }

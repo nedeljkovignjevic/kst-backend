@@ -19,7 +19,7 @@ export class StudentTest {
     @ManyToOne(() => Test, (test) => test.studentTests)
     test: Test
 
-    @OneToMany(type => StudentAnswer, studentAnswer => studentAnswer.studentTest)
+    @OneToMany(type => StudentAnswer, studentAnswer => studentAnswer.studentTest, { cascade: true })
     studentAnswers: StudentAnswer[];
 
     @CreateDateColumn({
