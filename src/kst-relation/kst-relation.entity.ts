@@ -1,3 +1,4 @@
+import { KnowledgeSpace } from "src/knowledge-space/knowledge-space.entity";
 import { KSTNode } from "src/kst-node/kst-node.entity";
 import { Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
@@ -12,5 +13,8 @@ export class KSTRelation {
 
     @ManyToOne(() => KSTNode, (node) => node.destinationRelations)
     destination: KSTNode;
+
+    @ManyToOne(() => KnowledgeSpace, (knowledgeSpace) => knowledgeSpace.relations)
+    knowledgeSpace: KnowledgeSpace;
 }
 

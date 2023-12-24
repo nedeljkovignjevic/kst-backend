@@ -17,6 +17,7 @@ import { CoursesModule } from './courses/courses.module';
 import { SeedModule } from './seed/seed.module';
 import { KstNodeModule } from './kst-node/kst-node.module';
 import { KstRelationModule } from './kst-relation/kst-relation.module';
+import { KnowledgeSpaceModule } from './knowledge-space/knowledge-space.module';
 
 
 @Module({
@@ -43,7 +44,7 @@ import { KstRelationModule } from './kst-relation/kst-relation.module';
     StudentAnswersModule, 
     SeedModule, 
     KstNodeModule, 
-    KstRelationModule
+    KstRelationModule, KnowledgeSpaceModule
   ],
 })
 export class AppModule {}
