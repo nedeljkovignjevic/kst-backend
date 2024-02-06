@@ -67,7 +67,7 @@ export class KnowledgeSpaceService {
             knowledgeSpaceDTO.concepts = []
             knowledgeSpace.nodes.forEach(node => {
                 let conceptDTO = new KSTConceptDTO();
-                conceptDTO.key = "sad za sad";
+                conceptDTO.key = String(node.id);
                 conceptDTO.concept = node.text;
                 conceptDTO.questionLevel = node.questionLevel;
                 conceptDTO.x = node.x;
