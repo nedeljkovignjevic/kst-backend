@@ -12,10 +12,10 @@ export class KSTNode {
     @Column({ nullable: false })
     text: string;
 
-    @Column({ nullable: false })
+    @Column('decimal', { precision: 6, scale: 2 })
     x: number;
 
-    @Column({ nullable: false })
+    @Column('decimal', { precision: 6, scale: 2 })
     y: number;
 
     @Column({ nullable: false })
