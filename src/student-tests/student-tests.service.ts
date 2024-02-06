@@ -7,8 +7,8 @@ import { TestsService } from 'src/tests/tests.service';
 import { QuestionsService } from 'src/questions/questions.service';
 import { AnswersService } from 'src/answers/answers.service';
 import { Test } from 'src/tests/test.entity';
-import axios from 'axios';
-
+import { HttpService } from '@nestjs/axios';
+import { lastValueFrom, map } from 'rxjs';
 
 
 @Injectable()
@@ -21,6 +21,8 @@ export class StudentTestsService {
         private testsService: TestsService,
         private questionsService: QuestionsService,
         private answersService: AnswersService,
+
+        private httpService: HttpService
     ) {}
 
     async createStudentTest(data: CreateStudentTestRequest, authUser) {
@@ -67,14 +69,15 @@ export class StudentTestsService {
         });
 
         // send data to iita endpoint
-        try {
-            const headers = { 'Content-Type': 'application/json' };
-        
-            const response = await axios.post('http://127.0.0.1:5000/iita', JSON.stringify(data), { headers });
-            return response.data;
-        } catch (error) {
-            throw new BadRequestException(error);
-        }
+        const headers = { 'Content-Type': 'application/json' };
+    
+        const iitaResponseData = await lastValueFrom(
+            this.httpService.post('http://localhost:5000/iita', data, { headers })
+            .pipe(map(res => res.data))
+        );
+
+            // const response = this.httpService.post('http://127.0.0.1:5000/iita', JSON.stringify(data), { headers });
+        return iitaResponseData;
     }
 
     private async checkStudentAnswer(test_id: number, data: CreateStudentAnswerRequest) {
