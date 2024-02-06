@@ -19,7 +19,6 @@ export class TestsController {
         return await this.testsService.findAll();
     }
 
-
     // @UseGuards(JwtAuthGuard, RolesGuard)
     // @Roles(Role.Admin, Role.Professor)
     @Post('/')
@@ -35,15 +34,4 @@ export class TestsController {
 
         return await this.testsService.findOneWithQuestions(id);
     }
-
-    // @UseGuards(JwtAuthGuard, RolesGuard)
-    // @Roles(Role.Admin, Role.Professor)
-    // @Post('/kst-graph')
-    // async createKSTGraph(@Body() data: CreateKSTGraphDTO, @Request() { user }) {
-
-    //     return await this.testsService.createKSTGraph(data, user);
-    // }
-
-
-
 }

@@ -24,7 +24,5 @@ export class UsersController {
     async getAllUsers() {
         return await this.userService.findAll(true);
     }
-
-
-
+    
 }

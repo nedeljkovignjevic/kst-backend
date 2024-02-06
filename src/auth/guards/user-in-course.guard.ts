@@ -39,7 +39,7 @@ export class UserInCourse implements CanActivate {
             return studentIds.includes(user.id);
         }
 
-        if (user.roles.includes(Role.Student)) {
+        if (user.roles.includes(Role.Professor)) {
             const course = await this.coursesService.findCourseByIdWithProfessors(courseId);
             const professorIds = course.professors.map(p => p.id);
             return professorIds.includes(user.id);
