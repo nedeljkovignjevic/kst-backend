@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { KnowledgeSpace } from './knowledge-space.entity';
 import { KSTNode } from 'src/kst-node/kst-node.entity';
-import { KSTRelation } from 'src/kst-relation/kst-relation.entity';
-import { KeyObject } from 'crypto';
 import { CreateKnowledgeSpaceDTO } from './dto/create-knowledge-space.dto.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -28,6 +26,8 @@ export class KnowledgeSpaceService {
         knowledgeSpace.relations = [];
 
         knowledgeSpace.nodes = [];
+        knowledgeSpace.name = data.graphName;
+        knowledgeSpace.description = data.graphDescription;
         knowledgeSpace = await this.knowledgeSpaceRepository.save(knowledgeSpace);
 
         data.concepts.forEach(c => {

@@ -10,6 +10,12 @@ export class KnowledgeSpace {
     @PrimaryGeneratedColumn()
     id: number;
 
+    @Column({ nullable: true })
+    name: string;
+
+    @Column({ nullable: true })
+    description: string;
+
     @ManyToOne(() => Test, (test) => test.knowledgeSpaces)
     test: Test;
 
