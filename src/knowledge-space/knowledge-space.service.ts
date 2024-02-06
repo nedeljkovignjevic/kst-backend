@@ -60,8 +60,8 @@ export class KnowledgeSpaceService {
         knowledgeSpaces.forEach(knowledgeSpace => {
             const knowledgeSpaceDTO = new KnowledgeSpaceDTO();
             knowledgeSpaceDTO.id = knowledgeSpace.id;
-            knowledgeSpaceDTO.graphName = "nema";
-            knowledgeSpaceDTO.graphDescription = "nema";
+            knowledgeSpaceDTO.graphName = knowledgeSpace.name;
+            knowledgeSpaceDTO.graphDescription = knowledgeSpace.description;
 
             // Fill nodes
             knowledgeSpaceDTO.concepts = []
