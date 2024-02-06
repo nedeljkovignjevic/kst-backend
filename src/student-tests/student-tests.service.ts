@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, ParseIntPipe } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { StudentTest } from './student-test.entity';
@@ -7,6 +7,9 @@ import { TestsService } from 'src/tests/tests.service';
 import { QuestionsService } from 'src/questions/questions.service';
 import { AnswersService } from 'src/answers/answers.service';
 import { Test } from 'src/tests/test.entity';
+import axios from 'axios';
+
+
 
 @Injectable()
 export class StudentTestsService {
@@ -45,6 +48,33 @@ export class StudentTestsService {
         }
 
         return this.studentTestsRepository.save(studentTest);
+    }
+
+    async iitaOnStudentTest(test_id: number) {
+        let studentTests = await this.studentTestsRepository.find({
+            relations: ['test', 'student', 'studentAnswers', 'studentAnswers.question', 'studentAnswers.answer'],
+            where: {
+                test: {
+                    id: test_id,
+                },
+            },
+        })
+
+        const data = {};
+        studentTests.forEach(studentTest => {
+            const answers = studentTest.studentAnswers.map(studentAnswer => Number(studentAnswer.answer.correct));
+            data[studentTest.student.email] = answers;
+        });
+
+        // send data to iita endpoint
+        try {
+            const headers = { 'Content-Type': 'application/json' };
+        
+            const response = await axios.post('http://127.0.0.1:5000/iita', JSON.stringify(data), { headers });
+            return response.data;
+        } catch (error) {
+            throw new BadRequestException(error);
+        }
     }
 
     private async checkStudentAnswer(test_id: number, data: CreateStudentAnswerRequest) {
