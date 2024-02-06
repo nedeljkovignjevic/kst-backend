@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { KnowledgeSpace } from './knowledge-space.entity';
 import { KSTNode } from 'src/kst-node/kst-node.entity';
 import { CreateKnowledgeSpaceDTO } from './dto/create-knowledge-space.dto.entity';
@@ -17,6 +17,25 @@ export class KnowledgeSpaceService {
         private kstNodeService: KstNodeService
     ) {}
 
+    async findOneById(id: number) {
+        let ks = await this.knowledgeSpaceRepository.findOne({
+            relations: ['test'],
+            where: {
+                id
+            }
+        })
+
+        if (!ks) {
+            throw new BadRequestException("Knowledge Space id not valid");
+        }
+
+        return ks;
+    }
+
+    async save(knowledgeSpace: KnowledgeSpace) {
+        
+        return await this.knowledgeSpaceRepository.save(knowledgeSpace);
+    }
 
     async createKnowledgeSpace(data: CreateKnowledgeSpaceDTO): Promise<KnowledgeSpace> {
         let knowledgeSpace = new KnowledgeSpace();

@@ -9,6 +9,7 @@ import { KstNodeModule } from 'src/kst-node/kst-node.module';
 @Module({
   imports: [TypeOrmModule.forFeature([KnowledgeSpace]), KstNodeModule],
   providers: [KnowledgeSpaceService],
+  exports: [KnowledgeSpaceService],
   controllers: [KnowledgeSpaceController]
 })
 export class KnowledgeSpaceModule {}

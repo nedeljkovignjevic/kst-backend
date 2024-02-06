@@ -7,9 +7,10 @@ import { QuestionsModule } from 'src/questions/questions.module';
 import { AnswersModule } from 'src/answers/answers.module';
 import { CoursesModule } from 'src/courses/courses.module';
 import { KstNodeModule } from 'src/kst-node/kst-node.module';
+import { KnowledgeSpaceModule } from 'src/knowledge-space/knowledge-space.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Test]), QuestionsModule, AnswersModule, CoursesModule, KstNodeModule],
+  imports: [TypeOrmModule.forFeature([Test]), QuestionsModule, AnswersModule, CoursesModule, KstNodeModule, KnowledgeSpaceModule],
   providers: [TestsService],
   exports: [TestsService],
   controllers: [TestsController]

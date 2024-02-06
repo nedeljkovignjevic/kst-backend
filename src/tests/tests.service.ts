@@ -10,7 +10,8 @@ import { Answer } from 'src/answers/answer.entity';
 import { QuestionsService } from 'src/questions/questions.service';
 import { Question } from 'src/questions/question.entity';
 import { KstNodeService } from 'src/kst-node/kst-node.service';
-import { create } from 'domain';
+import { KnowledgeSpaceService } from 'src/knowledge-space/knowledge-space.service';
+
 
 @Injectable()
 export class TestsService {
@@ -22,7 +23,9 @@ export class TestsService {
         private coursesService: CoursesService,
         private questionsService: QuestionsService,
         private answersService: AnswersService,
-        private kstNodeService: KstNodeService
+        private kstNodeService: KstNodeService,
+
+        private knowledgeSpaceService: KnowledgeSpaceService
     ) {}
 
     async findOne(id: number): Promise<Test> {
@@ -71,6 +74,11 @@ export class TestsService {
             throw new BadRequestException("Course id not valid");
         }
 
+        const knowledgeSpace = await this.knowledgeSpaceService.findOneById(data.knowledgeSpaceId);
+        if (!knowledgeSpace) {
+            throw new BadRequestException("Knowledge Space id not valid");
+        }
+        
         const createdTest = await this.testsRepository.save({
             course: course,
             title: data.testName,
@@ -79,6 +87,10 @@ export class TestsService {
             // This should be updated
             knowledgeSpaces: []
         })
+
+        knowledgeSpace.test = createdTest;
+        await this.knowledgeSpaceService.save(knowledgeSpace);
+
 
         data.questions.forEach(async questionDTO => {
             const q = new Question();
