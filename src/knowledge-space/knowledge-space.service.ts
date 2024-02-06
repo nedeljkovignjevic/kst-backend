@@ -56,7 +56,9 @@ export class KnowledgeSpaceService {
     async getAllKnowledgeSpaces(): Promise<KnowledgeSpaceDTO[]> {
         const retVal: KnowledgeSpaceDTO[] = []
 
-        let knowledgeSpaces = await this.knowledgeSpaceRepository.find();
+        let knowledgeSpaces = await this.knowledgeSpaceRepository.find({
+            relations: ['nodes']
+        });
         knowledgeSpaces.forEach(knowledgeSpace => {
             const knowledgeSpaceDTO = new KnowledgeSpaceDTO();
             knowledgeSpaceDTO.id = knowledgeSpace.id;
