@@ -1,9 +1,9 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 
 import { StudentTest } from "../student-tests/student-test.entity";
-import { Question } from "../questions/question.entity";
 import { Answer } from "../answers/answer.entity";
+import { Question } from "src/questions/question.entity";
 
 @Entity()
 export class StudentAnswer {

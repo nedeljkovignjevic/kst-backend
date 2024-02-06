@@ -4,7 +4,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/roles/roles.decorator';
 import { Role } from 'src/auth/roles/role.enum';
-import { CreateTestRequest } from './requests/create-test-request.dto';
+import { CreateTestDTO } from './dto/create-test.dto';
 
 @Controller('tests')
 export class TestsController {
@@ -15,24 +15,34 @@ export class TestsController {
     @Roles(Role.Admin, Role.Professor)
     @Get('/')
     async getTests() {
+
         return await this.testsService.findAll();
     }
 
 
-    @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles(Role.Admin, Role.Professor)
+    // @UseGuards(JwtAuthGuard, RolesGuard)
+    // @Roles(Role.Admin, Role.Professor)
     @Post('/')
-    async createTest(@Body() data: CreateTestRequest, @Request() { user }) {
+    async createTest(@Body() data: CreateTestDTO, @Request() { user }) {
 
-        return await this.testsService.createTest(data, user);
+        return await this.testsService.createTest(data);
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(Role.Admin, Role.Professor, Role.Student)
     @Get('/:id')
     async getOneTest(@Param('id', ParseIntPipe) id: number) {
+
         return await this.testsService.findOneWithQuestions(id);
     }
+
+    // @UseGuards(JwtAuthGuard, RolesGuard)
+    // @Roles(Role.Admin, Role.Professor)
+    // @Post('/kst-graph')
+    // async createKSTGraph(@Body() data: CreateKSTGraphDTO, @Request() { user }) {
+
+    //     return await this.testsService.createKSTGraph(data, user);
+    // }
 
 
 

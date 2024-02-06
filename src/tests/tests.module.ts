@@ -6,9 +6,10 @@ import { TestsController } from './tests.controller';
 import { QuestionsModule } from 'src/questions/questions.module';
 import { AnswersModule } from 'src/answers/answers.module';
 import { CoursesModule } from 'src/courses/courses.module';
+import { KstNodeModule } from 'src/kst-node/kst-node.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Test]), QuestionsModule, AnswersModule, CoursesModule],
+  imports: [TypeOrmModule.forFeature([Test]), QuestionsModule, AnswersModule, CoursesModule, KstNodeModule],
   providers: [TestsService],
   exports: [TestsService],
   controllers: [TestsController]
