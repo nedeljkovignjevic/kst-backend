@@ -1,15 +1,16 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Test } from './test.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DataSource } from 'typeorm';
-import { CreateTestRequest } from './requests/create-test-request.dto';
+import { Repository } from 'typeorm';
+import { CreateTestDTO } from './dto/create-test.dto';
 import { CoursesService } from 'src/courses/courses.service';
 import { AnswersService } from 'src/answers/answers.service';
 import { Answer } from 'src/answers/answer.entity';
 
 import { QuestionsService } from 'src/questions/questions.service';
 import { Question } from 'src/questions/question.entity';
-import { CreateKSTGraphDTO } from './requests/create-kst-graph.dto';
+import { KstNodeService } from 'src/kst-node/kst-node.service';
+import { create } from 'domain';
 
 @Injectable()
 export class TestsService {
@@ -20,7 +21,8 @@ export class TestsService {
 
         private coursesService: CoursesService,
         private questionsService: QuestionsService,
-        private answersService: AnswersService
+        private answersService: AnswersService,
+        private kstNodeService: KstNodeService
     ) {}
 
     async findOne(id: number): Promise<Test> {
@@ -63,7 +65,7 @@ export class TestsService {
         });
     }
 
-    async createTest(data: CreateTestRequest, authUser) {
+    async createTest(data: CreateTestDTO) {
         const course = await this.coursesService.findOne(data.courseId);
         if (!course) {
             throw new BadRequestException("Course id not valid");
@@ -71,14 +73,19 @@ export class TestsService {
 
         const createdTest = await this.testsRepository.save({
             course: course,
-            title: data.title,
-            createdById: authUser.id,
-        });
+            title: data.testName,
+            createdById: 1,
+
+            // This should be updated
+            knowledgeSpaces: []
+        })
 
         data.questions.forEach(async questionDTO => {
             const q = new Question();
             q.test = createdTest;
-            q.text = questionDTO.text;
+            q.text = questionDTO.question;
+            q.node = await this.kstNodeService.findOneById(questionDTO.nodeId);
+        
             const createdQuestion = await this.questionsService.save(q);
 
             questionDTO.answers.forEach(async answerDTO => {
@@ -91,10 +98,4 @@ export class TestsService {
         })
 
     }
-
-    async createKSTGraph(data: CreateKSTGraphDTO, authUser) {
-
-    }
-
-    
 }

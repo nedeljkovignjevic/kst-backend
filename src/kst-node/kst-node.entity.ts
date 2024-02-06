@@ -1,6 +1,7 @@
 import { KSTRelation } from "src/kst-relation/kst-relation.entity";
 import { Question } from "../questions/question.entity";
 import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { KnowledgeSpace } from "src/knowledge-space/knowledge-space.entity";
 
 @Entity()
 export class KSTNode {
@@ -17,6 +18,9 @@ export class KSTNode {
     @Column({ nullable: false })
     y: number;
 
+    @Column({ nullable: false })
+    questionLevel: number;
+
     @OneToMany(type => Question, question => question.node)
     questions: Question[];
 
@@ -25,5 +29,8 @@ export class KSTNode {
 
     @OneToMany(type => KSTRelation, relation => relation.destination)
     destinationRelations: KSTRelation[];
+
+    @ManyToOne(() => KnowledgeSpace, (knowledgeSpace) => knowledgeSpace.nodes)
+    knowledgeSpace: KnowledgeSpace;
 }
 

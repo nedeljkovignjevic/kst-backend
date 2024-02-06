@@ -6,7 +6,6 @@ class AnswerDTO {
     @IsNotEmpty()
     text: string;
 
-
     @IsBoolean()
     @IsNotEmpty()
     correct: boolean;
@@ -16,21 +15,29 @@ class QuestionDTO {
 
     @IsString()
     @IsNotEmpty()
-    text: string;
+    question: string;
 
     @IsNotEmpty()
     answers: AnswerDTO[];
+
+    @IsNumber()
+    @IsNotEmpty()
+    nodeId: number
 }
 
-export class CreateTestRequest {
+export class CreateTestDTO {
 
     @IsNumber()
     @IsNotEmpty()
     courseId: number;
 
+    @IsNumber()
+    @IsNotEmpty()
+    knowledgeSpaceId: number;
+
     @IsString()
     @IsNotEmpty()
-    title: string;
+    testName: string;
 
     @IsNotEmpty()
     questions: QuestionDTO[]

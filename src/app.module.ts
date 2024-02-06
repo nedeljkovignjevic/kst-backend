@@ -44,7 +44,8 @@ import { KnowledgeSpaceModule } from './knowledge-space/knowledge-space.module';
     StudentAnswersModule, 
     SeedModule, 
     KstNodeModule, 
-    KstRelationModule, KnowledgeSpaceModule
+    KstRelationModule, 
+    KnowledgeSpaceModule
   ],
 })
 export class AppModule {}
