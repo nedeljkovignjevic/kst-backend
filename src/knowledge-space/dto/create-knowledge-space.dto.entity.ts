@@ -3,8 +3,7 @@ import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 export class KSTConceptDTO {
 
     @IsString()
-    @IsNotEmpty()
-    id: string;
+    key: string;
 
     @IsString()
     @IsNotEmpty()
