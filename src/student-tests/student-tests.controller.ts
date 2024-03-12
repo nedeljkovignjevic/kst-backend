@@ -26,6 +26,12 @@ export class StudentTestsController {
         return await this.studentTestsService.getAllStudentTests();
     }
 
+    @Get('/:id')
+    async getStudentTestById(@Param('id', ParseIntPipe) id: number) {
+       
+        return [];
+    }
+    
 
     @Post('/iita/:id')
     async iita(@Param('id', ParseIntPipe) id: number) {

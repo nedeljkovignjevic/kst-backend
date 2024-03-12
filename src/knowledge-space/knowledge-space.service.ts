@@ -56,6 +56,7 @@ export class KnowledgeSpaceService {
         
         data.concepts.forEach(c => {
             let node = new KSTNode();
+            node.key = c.key;
             node.text = c.concept;
             node.x = c.x;
             node.y = c.y;
