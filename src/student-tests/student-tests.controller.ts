@@ -1,4 +1,4 @@
-import { Body, Controller, Param, ParseIntPipe, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post, Request, UseGuards } from '@nestjs/common';
 import { StudentTestsService } from './student-tests.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
@@ -19,6 +19,13 @@ export class StudentTestsController {
 
         return await this.studentTestsService.createStudentTest(data, user);
     }
+
+    @Get('/')
+    async getStudentTests() {
+       
+        return await this.studentTestsService.getAllStudentTests();
+    }
+
 
     @Post('/iita/:id')
     async iita(@Param('id', ParseIntPipe) id: number) {

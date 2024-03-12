@@ -25,6 +25,14 @@ export class StudentTestsService {
         private httpService: HttpService
     ) {}
 
+    async getAllStudentTests() {
+        let studentTests = await this.studentTestsRepository.find({
+            relations: ['test', 'test.questions', 'test.questions.answers', 'student']
+        });
+
+        return studentTests;
+    }
+
     async createStudentTest(data: CreateStudentTestRequest, authUser) {
         const test = await this.testsService.findOneWithQuestions(data.test_id);
         if (!test) {
