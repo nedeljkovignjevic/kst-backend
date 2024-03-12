@@ -33,6 +33,16 @@ export class StudentTestsService {
         return studentTests;
     }
 
+    async getStudentTestById(id: number) {
+        let studentTest = await this.studentTestsRepository.findOne({
+            where: {
+                id,
+              },
+        });
+
+        return studentTest;
+    }
+
     async createStudentTest(data: CreateStudentTestRequest, authUser) {
         const test = await this.testsService.findOneWithQuestions(data.test_id);
         if (!test) {
