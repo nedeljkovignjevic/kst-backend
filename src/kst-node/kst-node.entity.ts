@@ -9,7 +9,7 @@ export class KSTNode {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ nullable: true })
+    @Column({ nullable: false })
     key: string;
 
     @Column({ nullable: false })
