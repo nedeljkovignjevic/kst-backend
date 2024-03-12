@@ -24,7 +24,7 @@ export class EditKSTConceptDTO {
 export class EditKSTRelationDTO {
 
     id: number;
-    
+
     @IsString()
     source: string;
 
