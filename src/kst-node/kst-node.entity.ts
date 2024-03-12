@@ -10,6 +10,9 @@ export class KSTNode {
     id: number;
 
     @Column({ nullable: false })
+    key: string;
+
+    @Column({ nullable: false })
     text: string;
 
     @Column('decimal', { precision: 6, scale: 2 })
@@ -18,17 +21,8 @@ export class KSTNode {
     @Column('decimal', { precision: 6, scale: 2 })
     y: number;
 
-    @Column({ nullable: false })
-    questionLevel: number;
-
     @OneToMany(type => Question, question => question.node)
     questions: Question[];
-
-    @OneToMany(type => KSTRelation, relation => relation.source)
-    sourceRelations: KSTRelation[];
-
-    @OneToMany(type => KSTRelation, relation => relation.destination)
-    destinationRelations: KSTRelation[];
 
     @ManyToOne(() => KnowledgeSpace, (knowledgeSpace) => knowledgeSpace.nodes)
     knowledgeSpace: KnowledgeSpace;

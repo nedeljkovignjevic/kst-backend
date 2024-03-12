@@ -1,6 +1,7 @@
+import { IsString } from "class-validator";
 import { KnowledgeSpace } from "src/knowledge-space/knowledge-space.entity";
 import { KSTNode } from "src/kst-node/kst-node.entity";
-import { Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class KSTRelation {
@@ -8,11 +9,11 @@ export class KSTRelation {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(() => KSTNode, (node) => node.sourceRelations)
-    source: KSTNode;
+    @Column({ nullable: false })
+    source: string;
 
-    @ManyToOne(() => KSTNode, (node) => node.destinationRelations)
-    destination: KSTNode;
+    @Column({ nullable: false })
+    target: string;
 
     @ManyToOne(() => KnowledgeSpace, (knowledgeSpace) => knowledgeSpace.relations)
     knowledgeSpace: KnowledgeSpace;

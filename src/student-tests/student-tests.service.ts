@@ -70,19 +70,18 @@ export class StudentTestsService {
 
         // send data to iita endpoint
         const headers = { 'Content-Type': 'application/json' };
-    
-        console.log("sti lud?");
+
+        console.log("sti lud? aaa");
         try {
             const iitaResponseData = await lastValueFrom(
-                this.httpService.post('http://127.0.0.1:5000/iita/', data, { headers })
+                this.httpService.post('http://192.168.1.9:5000/iita', JSON.stringify(data), { headers })
                 .pipe(map(res => res.data))
             );
             console.log('Response from Flask API:', iitaResponseData);
+            return iitaResponseData;
         } catch (error) {
             console.error('Error connecting to Flask API:', error);
         }
-
-        return;
     }
 
     private async checkStudentAnswer(test_id: number, data: CreateStudentAnswerRequest) {

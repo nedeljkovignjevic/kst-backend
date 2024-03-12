@@ -91,7 +91,6 @@ export class TestsService {
         knowledgeSpace.test = createdTest;
         await this.knowledgeSpaceService.save(knowledgeSpace);
 
-
         data.questions.forEach(async questionDTO => {
             const q = new Question();
             q.test = createdTest;

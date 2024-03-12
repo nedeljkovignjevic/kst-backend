@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 
-export class KSTConceptDTO {
+export class CreateKSTConceptDTO {
 
     @IsString()
     key: string;
@@ -11,15 +11,20 @@ export class KSTConceptDTO {
 
     @IsNumber()
     @IsNotEmpty()
-    questionLevel: number;
-
-    @IsNumber()
-    @IsNotEmpty()
     x: number;
 
     @IsNumber()
     @IsNotEmpty()
     y: number;
+}
+
+export class CreateKSTRelationDTO {
+
+    @IsString()
+    source: string;
+
+    @IsString()
+    target: string;
 }
 
 export class CreateKnowledgeSpaceDTO {
@@ -33,5 +38,8 @@ export class CreateKnowledgeSpaceDTO {
     graphDescription: string;
 
     @IsNotEmpty()
-    concepts: KSTConceptDTO[]
+    concepts: CreateKSTConceptDTO[]
+
+    @IsNotEmpty()
+    links: CreateKSTRelationDTO[]
 }
