@@ -8,6 +8,7 @@ import { KstNodeService } from 'src/kst-node/kst-node.service';
 import { KSTConceptDTO, KSTRelationDTO, KnowledgeSpaceDTO } from './dto/knowledge-space.dto.entity';
 import { KSTRelation } from 'src/kst-relation/kst-relation.entity';
 import { KstRelationService } from 'src/kst-relation/kst-relation.service';
+import { EditKnowledgeSpaceDTO } from './dto/edit-knowledge-space.dto.entity';
 
 @Injectable()
 export class KnowledgeSpaceService {
@@ -121,5 +122,54 @@ export class KnowledgeSpaceService {
         })
 
         return retVal;
+    }
+
+    async editKnowledgeSpace(data: EditKnowledgeSpaceDTO): Promise<KnowledgeSpace> {
+        let knowledgeSpace = await this.knowledgeSpaceRepository.findOne({
+            where: {
+                id: data.id
+            },
+        });
+        
+        knowledgeSpace.name = data.graphName;
+        knowledgeSpace.description = data.graphDescription;
+
+        knowledgeSpace = await this.knowledgeSpaceRepository.save(knowledgeSpace);
+        
+        data.concepts.forEach(async c => {
+            if (c.id) {
+                let node = await this.kstNodeService.findOneById(c.id);
+                node.key = c.key;
+                node.text = c.concept;
+                node.x = c.x;
+                node.y = c.y;
+                this.kstNodeService.save(node);
+            } else {
+                let node = new KSTNode();
+                node.key = c.key;
+                node.text = c.concept;
+                node.x = c.x;
+                node.y = c.y;
+                node.questions = [];
+                node.knowledgeSpace = knowledgeSpace;
+                this.kstNodeService.save(node);
+            }
+        })
+
+        data.links.forEach(l => {
+            if (!l.id) {
+                let relation = new KSTRelation();
+                relation.source = l.source;
+                relation.target = l.target;
+                relation.knowledgeSpace = knowledgeSpace;
+                this.kstRelationService.save(relation);
+            }
+        })
+
+        return this.knowledgeSpaceRepository.findOne({
+            where: {
+                id: knowledgeSpace.id
+              },
+        });
     }
 }
