@@ -29,7 +29,7 @@ export class StudentTestsController {
     @Get('/:id')
     async getStudentTestById(@Param('id', ParseIntPipe) id: number) {
        
-        return [];
+        return await this.studentTestsService.getStudentTestById(id);
     }
     
 
