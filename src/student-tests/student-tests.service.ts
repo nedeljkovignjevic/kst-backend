@@ -94,9 +94,11 @@ export class StudentTestsService {
         })
 
         const data = {};
+        let numberOfNodes = 0;
         studentTests.forEach(studentTest => {
             const answers = studentTest.studentAnswers.map(studentAnswer => Number(studentAnswer.answer.correct));
             data[studentTest.student.email] = answers;
+            numberOfNodes = answers.length;
         });
 
         // send data to iita endpoint
@@ -106,28 +108,31 @@ export class StudentTestsService {
                 this.httpService.post('http://192.168.1.9:5000/iita', JSON.stringify(data), { headers })
                 .pipe(map(res => res.data))
             );
-            console.log('Response from Flask API:', iitaResponseData);
-            let implications = iitaResponseData["implications"]
 
             let knowledgeSpace = new KnowledgeSpace();
             knowledgeSpace.name = "EKG for" + String(studentTests[0].test.title);
             knowledgeSpace.test = studentTests[0].test
             this.knowledgeSpaceService.save(knowledgeSpace);    
-                
+
             // Create KSTNodes
-            const nodes = await Promise.all(Object.keys(data).map(async (_, index) => {
-                const node = new KSTNode();
+            let nodes = [];
+            for (let i = 0; i < numberOfNodes; i++) {
+                let node = new KSTNode();
                 node.key = uuidv4();
                 node.knowledgeSpace = knowledgeSpace;
-                node.text = String(index);
+                node.text = String(i);
                 node.x = 50;
                 node.y = 50;
+                nodes.push(node);
                 await this.kstNodeService.save(node);
-                return node;
-            }));
+            }
+
+            // For links (kst-relations) first eliminate repeating pairs
+            // [[0, 1], [1, 0], [0, 2], [0, 3]] -> [[0, 2], [0, 3]]
+            const implications = this.eliminateRepeatingPairs(iitaResponseData["implications"]);
 
             // Create KSTRelations
-            await Promise.all(iitaResponseData.implications.map(async (implication) => {
+            await Promise.all(implications.map(async (implication) => {
                 const relation = new KSTRelation();
                 relation.knowledgeSpace = knowledgeSpace;
                 relation.source = nodes[implication[0]].key;
@@ -138,6 +143,29 @@ export class StudentTestsService {
         } catch (error) {
             console.error('Error connecting to Flask API:', error);
         }
+    }
+
+    private eliminateRepeatingPairs(input: number[][]): number[][] {
+        const reversePairs: { [key: string]: boolean } = {};
+        const result: number[][] = [];
+    
+        for (const pair of input) {
+            const key = pair.join(',');
+            const reverseKey = pair.slice().reverse().join(',');
+    
+            // If the reverse pair exists, skip both pairs
+            if (reverseKey in reversePairs) {
+                delete reversePairs[reverseKey];
+                continue;
+            }
+    
+            // Otherwise, add the current pair and its reverse to the dictionary
+            reversePairs[key] = true;
+            reversePairs[reverseKey] = true;
+            result.push(pair);
+        }
+    
+        return result;
     }
 
     private async checkStudentAnswer(test_id: number, data: CreateStudentAnswerRequest) {
