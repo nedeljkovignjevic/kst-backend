@@ -93,12 +93,11 @@ export class StudentTestsService {
             },
         })
 
+        const numberOfNodes = studentTests.at(0).studentAnswers.length;
         const data = {};
-        let numberOfNodes = 0;
         studentTests.forEach(studentTest => {
             const answers = studentTest.studentAnswers.map(studentAnswer => Number(studentAnswer.answer.correct));
             data[studentTest.student.email] = answers;
-            numberOfNodes = answers.length;
         });
 
         // send data to iita endpoint
@@ -129,8 +128,9 @@ export class StudentTestsService {
 
             // For links (kst-relations) first eliminate repeating pairs
             // [[0, 1], [1, 0], [0, 2], [0, 3]] -> [[0, 2], [0, 3]]
+            console.log(iitaResponseData["implications"]);
             const implications = this.eliminateRepeatingPairs(iitaResponseData["implications"]);
-
+            console.log(implications);
             // Create KSTRelations
             await Promise.all(implications.map(async (implication) => {
                 const relation = new KSTRelation();
@@ -146,26 +146,29 @@ export class StudentTestsService {
     }
 
     private eliminateRepeatingPairs(input: number[][]): number[][] {
-        const reversePairs: { [key: string]: boolean } = {};
-        const result: number[][] = [];
+        const result: { [key: string]: boolean } = {};
     
         for (const pair of input) {
             const key = pair.join(',');
-            const reverseKey = pair.slice().reverse().join(',');
-    
-            // If the reverse pair exists, skip both pairs
-            if (reverseKey in reversePairs) {
-                delete reversePairs[reverseKey];
-                continue;
+            const reversedKey = pair.slice().reverse().join(',');
+
+            // Check if the pair or its reverse has been seen before
+            if (!result[key] && !result[reversedKey]) {
+                result[key] = true;
+            } else {
+                if (key in result) 
+                    delete result[key];
+                if (reversedKey in result)
+                    delete result[reversedKey];     
             }
-    
-            // Otherwise, add the current pair and its reverse to the dictionary
-            reversePairs[key] = true;
-            reversePairs[reverseKey] = true;
-            result.push(pair);
         }
     
-        return result;
+        const resultList: number[][] = Object.keys(result).map(key => {
+            const [first, second] = key.split(',').map(Number);
+            return [first, second];
+        });
+
+        return resultList;
     }
 
     private async checkStudentAnswer(test_id: number, data: CreateStudentAnswerRequest) {
