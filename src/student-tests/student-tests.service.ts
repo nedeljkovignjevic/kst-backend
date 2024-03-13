@@ -9,6 +9,7 @@ import { AnswersService } from 'src/answers/answers.service';
 import { Test } from 'src/tests/test.entity';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom, map } from 'rxjs';
+import { KnowledgeSpace } from 'src/knowledge-space/knowledge-space.entity';
 
 
 @Injectable()
@@ -35,6 +36,7 @@ export class StudentTestsService {
 
     async getStudentTestById(id: number) {
         let studentTest = await this.studentTestsRepository.findOne({
+            relations: ['test', 'test.questions', 'test.questions.answers', 'student', 'studentAnswers'],
             where: {
                 id,
               },
@@ -88,15 +90,24 @@ export class StudentTestsService {
 
         // send data to iita endpoint
         const headers = { 'Content-Type': 'application/json' };
-
-        console.log("sti lud? aaa");
         try {
             const iitaResponseData = await lastValueFrom(
                 this.httpService.post('http://192.168.1.9:5000/iita', JSON.stringify(data), { headers })
                 .pipe(map(res => res.data))
             );
             console.log('Response from Flask API:', iitaResponseData);
-            return iitaResponseData;
+            let implications = iitaResponseData["implications"]
+
+            let knowledgeSpace = new KnowledgeSpace();
+            knowledgeSpace.name = "EKG for" + String(studentTests[0].test.title);
+            knowledgeSpace.test = studentTests[0].test
+            knowledgeSpace.nodes = [];
+            knowledgeSpace.relations = [];
+
+            for (let i of implications) {
+                console.log(i);
+            }
+            
         } catch (error) {
             console.error('Error connecting to Flask API:', error);
         }
