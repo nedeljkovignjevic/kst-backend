@@ -10,6 +10,14 @@ import { Test } from 'src/tests/test.entity';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom, map } from 'rxjs';
 import { KnowledgeSpace } from 'src/knowledge-space/knowledge-space.entity';
+import { KSTNode } from 'src/kst-node/kst-node.entity';
+import { v4 as uuidv4 } from 'uuid';
+import { KstNodeModule } from 'src/kst-node/kst-node.module';
+import { KnowledgeSpaceService } from 'src/knowledge-space/knowledge-space.service';
+import { KstNodeService } from 'src/kst-node/kst-node.service';
+import { KstRelationModule } from 'src/kst-relation/kst-relation.module';
+import { KstRelationService } from 'src/kst-relation/kst-relation.service';
+import { KSTRelation } from 'src/kst-relation/kst-relation.entity';
 
 
 @Injectable()
@@ -22,6 +30,9 @@ export class StudentTestsService {
         private testsService: TestsService,
         private questionsService: QuestionsService,
         private answersService: AnswersService,
+        private knowledgeSpaceService: KnowledgeSpaceService,
+        private kstNodeService: KstNodeService,
+        private kstRelationService: KstRelationService,
 
         private httpService: HttpService
     ) {}
@@ -101,11 +112,26 @@ export class StudentTestsService {
             let knowledgeSpace = new KnowledgeSpace();
             knowledgeSpace.name = "EKG for" + String(studentTests[0].test.title);
             knowledgeSpace.test = studentTests[0].test
-            knowledgeSpace.nodes = [];
-            knowledgeSpace.relations = [];
-
+            this.knowledgeSpaceService.save(knowledgeSpace);    
+                
+            let nodes = [];
+            for (let i = 0; i < Object.keys(data).length; i++) {
+                let node = new KSTNode();
+                node.key = uuidv4();
+                node.knowledgeSpace = knowledgeSpace;
+                node.text = String(i);
+                node.x = 50;
+                node.y = 50;
+                this.kstNodeService.save(node);
+                nodes.push(node);
+            }
+            
             for (let i of implications) {
-                console.log(i);
+                let relation = new KSTRelation();
+                relation.knowledgeSpace = knowledgeSpace;
+                relation.source = nodes.at(i[0]).key;
+                relation.target = nodes.at(i[1]).key;
+                this.kstRelationService.save(relation);
             }
             
         } catch (error) {
