@@ -114,25 +114,26 @@ export class StudentTestsService {
             knowledgeSpace.test = studentTests[0].test
             this.knowledgeSpaceService.save(knowledgeSpace);    
                 
-            let nodes = [];
-            for (let i = 0; i < Object.keys(data).length; i++) {
-                let node = new KSTNode();
+            // Create KSTNodes
+            const nodes = await Promise.all(Object.keys(data).map(async (_, index) => {
+                const node = new KSTNode();
                 node.key = uuidv4();
                 node.knowledgeSpace = knowledgeSpace;
-                node.text = String(i);
+                node.text = String(index);
                 node.x = 50;
                 node.y = 50;
-                this.kstNodeService.save(node);
-                nodes.push(node);
-            }
-            
-            for (let i of implications) {
-                let relation = new KSTRelation();
+                await this.kstNodeService.save(node);
+                return node;
+            }));
+
+            // Create KSTRelations
+            await Promise.all(iitaResponseData.implications.map(async (implication) => {
+                const relation = new KSTRelation();
                 relation.knowledgeSpace = knowledgeSpace;
-                relation.source = nodes.at(i[0]).key;
-                relation.target = nodes.at(i[1]).key;
-                this.kstRelationService.save(relation);
-            }
+                relation.source = nodes[implication[0]].key;
+                relation.target = nodes[implication[1]].key;
+                await this.kstRelationService.save(relation);
+            }));
             
         } catch (error) {
             console.error('Error connecting to Flask API:', error);
