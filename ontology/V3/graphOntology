@@ -1,0 +1,266 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://localhost:8890/graphs/"
+     xml:base="http://localhost:8890/graphs/"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:graphs="http://localhost:8890/graphs#">
+    <owl:Ontology rdf:about="http://localhost:8890/graphs"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://localhost:8890/graphs#hasConcept -->
+
+    <owl:ObjectProperty rdf:about="http://localhost:8890/graphs#hasConcept">
+        <rdfs:domain rdf:resource="http://localhost:8890/graphs#Graph"/>
+        <rdfs:range rdf:resource="http://localhost:8890/graphs#Concept"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://localhost:8890/graphs#hasLink -->
+
+    <owl:ObjectProperty rdf:about="http://localhost:8890/graphs#hasLink">
+        <rdfs:domain rdf:resource="http://localhost:8890/graphs#Graph"/>
+        <rdfs:range rdf:resource="http://localhost:8890/graphs#Concept"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://localhost:8890/graphs#hasSource -->
+
+    <owl:ObjectProperty rdf:about="http://localhost:8890/graphs#hasSource">
+        <rdfs:domain rdf:resource="http://localhost:8890/graphs#Concept"/>
+        <rdfs:range rdf:resource="http://localhost:8890/graphs#Concept"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://localhost:8890/graphs#hasTarget -->
+
+    <owl:ObjectProperty rdf:about="http://localhost:8890/graphs#hasTarget">
+        <rdfs:domain rdf:resource="http://localhost:8890/graphs#Concept"/>
+        <rdfs:range rdf:resource="http://localhost:8890/graphs#Concept"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://localhost:8890/graphs#concept -->
+
+    <owl:DatatypeProperty rdf:about="http://localhost:8890/graphs#concept">
+        <rdfs:domain rdf:resource="http://localhost:8890/graphs#Concept"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://localhost:8890/graphs#conceptId -->
+
+    <owl:DatatypeProperty rdf:about="http://localhost:8890/graphs#conceptId">
+        <rdfs:domain rdf:resource="http://localhost:8890/graphs#Concept"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://localhost:8890/graphs#graphDescription -->
+
+    <owl:DatatypeProperty rdf:about="http://localhost:8890/graphs#graphDescription">
+        <rdfs:domain rdf:resource="http://localhost:8890/graphs#Graph"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://localhost:8890/graphs#graphId -->
+
+    <owl:DatatypeProperty rdf:about="http://localhost:8890/graphs#graphId">
+        <rdfs:domain rdf:resource="http://localhost:8890/graphs#Graph"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://localhost:8890/graphs#graphName -->
+
+    <owl:DatatypeProperty rdf:about="http://localhost:8890/graphs#graphName">
+        <rdfs:domain rdf:resource="http://localhost:8890/graphs#Graph"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://localhost:8890/graphs#key -->
+
+    <owl:DatatypeProperty rdf:about="http://localhost:8890/graphs#key">
+        <rdfs:domain rdf:resource="http://localhost:8890/graphs#Graph"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://localhost:8890/graphs#linkId -->
+
+    <owl:DatatypeProperty rdf:about="http://localhost:8890/graphs#linkId">
+        <rdfs:domain rdf:resource="http://localhost:8890/graphs#Link"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://localhost:8890/graphs#source -->
+
+    <owl:DatatypeProperty rdf:about="http://localhost:8890/graphs#source">
+        <rdfs:domain rdf:resource="http://localhost:8890/graphs#Link"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://localhost:8890/graphs#target -->
+
+    <owl:DatatypeProperty rdf:about="http://localhost:8890/graphs#target">
+        <rdfs:domain rdf:resource="http://localhost:8890/graphs#Link"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://localhost:8890/graphs#x -->
+
+    <owl:DatatypeProperty rdf:about="http://localhost:8890/graphs#x">
+        <rdfs:domain rdf:resource="http://localhost:8890/graphs#Concept"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://localhost:8890/graphs#y -->
+
+    <owl:DatatypeProperty rdf:about="http://localhost:8890/graphs#y">
+        <rdfs:domain rdf:resource="http://localhost:8890/graphs#Concept"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://localhost:8890/graphs#Concept -->
+
+    <owl:Class rdf:about="http://localhost:8890/graphs#Concept"/>
+    
+
+
+    <!-- http://localhost:8890/graphs#Graph -->
+
+    <owl:Class rdf:about="http://localhost:8890/graphs#Graph"/>
+    
+
+
+    <!-- http://localhost:8890/graphs#Link -->
+
+    <owl:Class rdf:about="http://localhost:8890/graphs#Link"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://localhost:8890/graphs#concept1 -->
+
+    <owl:NamedIndividual rdf:about="http://localhost:8890/graphs#concept1">
+        <rdf:type rdf:resource="http://localhost:8890/graphs#Concept"/>
+        <graphs:concept>concept1</graphs:concept>
+        <graphs:conceptId rdf:datatype="http://www.w3.org/2001/XMLSchema#int">99998</graphs:conceptId>
+        <graphs:key>fc4f8405-7623-4f8f-9bb5-f7141d98dbec</graphs:key>
+        <graphs:x rdf:datatype="http://www.w3.org/2001/XMLSchema#float">245.92</graphs:x>
+        <graphs:y rdf:datatype="http://www.w3.org/2001/XMLSchema#float">189.25</graphs:y>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://localhost:8890/graphs#concept2 -->
+
+    <owl:NamedIndividual rdf:about="http://localhost:8890/graphs#concept2">
+        <rdf:type rdf:resource="http://localhost:8890/graphs#Concept"/>
+        <graphs:concept>concept2</graphs:concept>
+        <graphs:conceptId rdf:datatype="http://www.w3.org/2001/XMLSchema#int">78883</graphs:conceptId>
+        <graphs:key>c585ac3e-30d1-4abe-a7d7-f62316fd5908</graphs:key>
+        <graphs:x rdf:datatype="http://www.w3.org/2001/XMLSchema#float">175.22</graphs:x>
+        <graphs:x rdf:datatype="http://www.w3.org/2001/XMLSchema#float">235.01</graphs:x>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://localhost:8890/graphs#graph1 -->
+
+    <owl:NamedIndividual rdf:about="http://localhost:8890/graphs#graph1">
+        <rdf:type rdf:resource="http://localhost:8890/graphs#Graph"/>
+        <graphs:hasConcept rdf:resource="http://localhost:8890/graphs#concept1"/>
+        <graphs:hasConcept rdf:resource="http://localhost:8890/graphs#concept2"/>
+        <graphs:hasLink rdf:resource="http://localhost:8890/graphs#link1"/>
+        <graphs:graphDescription>Graph used for testing Ontology.</graphs:graphDescription>
+        <graphs:graphId rdf:datatype="http://www.w3.org/2001/XMLSchema#int">55555</graphs:graphId>
+        <graphs:graphName>Ontology Test Graph</graphs:graphName>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://localhost:8890/graphs#link1 -->
+
+    <owl:NamedIndividual rdf:about="http://localhost:8890/graphs#link1">
+        <rdf:type rdf:resource="http://localhost:8890/graphs#Link"/>
+        <graphs:hasSource rdf:resource="http://localhost:8890/graphs#concept1"/>
+        <graphs:hasTarget rdf:resource="http://localhost:8890/graphs#concept2"/>
+        <graphs:linkId rdf:datatype="http://www.w3.org/2001/XMLSchema#int">77222</graphs:linkId>
+        <graphs:source>fc4f8405-7623-4f8f-9bb5-f7141d98dbec</graphs:source>
+        <graphs:target>c585ac3e-30d1-4abe-a7d7-f62316fd5908</graphs:target>
+    </owl:NamedIndividual>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.5.26.2023-07-17T20:34:13Z) https://github.com/owlcs/owlapi -->
+
