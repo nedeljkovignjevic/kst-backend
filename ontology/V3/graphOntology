@@ -228,8 +228,8 @@
         <graphs:concept>concept2</graphs:concept>
         <graphs:conceptId rdf:datatype="http://www.w3.org/2001/XMLSchema#int">78883</graphs:conceptId>
         <graphs:key>c585ac3e-30d1-4abe-a7d7-f62316fd5908</graphs:key>
-        <graphs:x rdf:datatype="http://www.w3.org/2001/XMLSchema#float">175.22</graphs:x>
         <graphs:x rdf:datatype="http://www.w3.org/2001/XMLSchema#float">235.01</graphs:x>
+        <graphs:y rdf:datatype="http://www.w3.org/2001/XMLSchema#float">175.22</graphs:y>
     </owl:NamedIndividual>
     
 
