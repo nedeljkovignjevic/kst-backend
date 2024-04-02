@@ -47,7 +47,8 @@ export class StudentTestsService {
 
     async getStudentTestById(id: number) {
         let studentTest = await this.studentTestsRepository.findOne({
-            relations: ['test', 'test.questions', 'test.questions.answers', 'student', 'studentAnswers', 'studentAnswers.question', 'studentAnswers.answer'],
+            relations: ['test', 'test.questions', 'test.questions.answers', 'student', 'studentAnswers', 'studentAnswers.question', 'studentAnswers.answer', 'test.knowledgeSpaces',
+                        'test.knowledgeSpaces.nodes', 'test.knowledgeSpaces.relations', 'studentAnswers.question.node'],
             where: {
                 id,
               },

@@ -18,26 +18,17 @@ export class VirtuosoService {
 
     try {
       const response = await lastValueFrom(
-        this.httpService.post('http://localhost:8890/sparql', null, {
+        // http://localhost:8890/sparql if nest is on same machine as virtuoso
+        // Since nest is in docker and virtuoso isn't we use this below
+        this.httpService.post('http://host.docker.internal:8890/sparql', null, {
           params: { query, format: 'json' },
           headers: { Accept: 'application/sparql-results+json' },
         }),
       );
       return response.data.results.bindings;
     } catch (error) {
-      // Handle errors, possibly throw an application-specific error
       console.error(error);
       throw error;
     }
-  }
-}
-
-@Controller('virtuoso')
-export class GraphsController {
-  constructor(private virtuosoService: VirtuosoService) {}
-
-  @Get('/')
-  async getAllGraphs() {
-    return await this.virtuosoService.getAllGraphs();
   }
 }
