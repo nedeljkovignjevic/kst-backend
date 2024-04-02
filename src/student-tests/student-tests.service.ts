@@ -10,6 +10,14 @@ import { Test } from 'src/tests/test.entity';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom, map } from 'rxjs';
 import { KnowledgeSpace } from 'src/knowledge-space/knowledge-space.entity';
+import { KSTNode } from 'src/kst-node/kst-node.entity';
+import { v4 as uuidv4 } from 'uuid';
+import { KstNodeModule } from 'src/kst-node/kst-node.module';
+import { KnowledgeSpaceService } from 'src/knowledge-space/knowledge-space.service';
+import { KstNodeService } from 'src/kst-node/kst-node.service';
+import { KstRelationModule } from 'src/kst-relation/kst-relation.module';
+import { KstRelationService } from 'src/kst-relation/kst-relation.service';
+import { KSTRelation } from 'src/kst-relation/kst-relation.entity';
 
 
 @Injectable()
@@ -22,6 +30,9 @@ export class StudentTestsService {
         private testsService: TestsService,
         private questionsService: QuestionsService,
         private answersService: AnswersService,
+        private knowledgeSpaceService: KnowledgeSpaceService,
+        private kstNodeService: KstNodeService,
+        private kstRelationService: KstRelationService,
 
         private httpService: HttpService
     ) {}
@@ -82,6 +93,7 @@ export class StudentTestsService {
             },
         })
 
+        const numberOfNodes = studentTests.at(0).studentAnswers.length;
         const data = {};
         studentTests.forEach(studentTest => {
             const answers = studentTest.studentAnswers.map(studentAnswer => Number(studentAnswer.answer.correct));
@@ -95,22 +107,68 @@ export class StudentTestsService {
                 this.httpService.post('http://192.168.1.9:5000/iita', JSON.stringify(data), { headers })
                 .pipe(map(res => res.data))
             );
-            console.log('Response from Flask API:', iitaResponseData);
-            let implications = iitaResponseData["implications"]
 
             let knowledgeSpace = new KnowledgeSpace();
             knowledgeSpace.name = "EKG for" + String(studentTests[0].test.title);
             knowledgeSpace.test = studentTests[0].test
-            knowledgeSpace.nodes = [];
-            knowledgeSpace.relations = [];
+            this.knowledgeSpaceService.save(knowledgeSpace);    
 
-            for (let i of implications) {
-                console.log(i);
+            // Create KSTNodes
+            let nodes = [];
+            for (let i = 0; i < numberOfNodes; i++) {
+                let node = new KSTNode();
+                node.key = uuidv4();
+                node.knowledgeSpace = knowledgeSpace;
+                node.text = String(i);
+                node.x = 50;
+                node.y = 50;
+                nodes.push(node);
+                await this.kstNodeService.save(node);
             }
+
+            // For links (kst-relations) first eliminate repeating pairs
+            // [[0, 1], [1, 0], [0, 2], [0, 3]] -> [[0, 2], [0, 3]]
+            console.log(iitaResponseData["implications"]);
+            const implications = this.eliminateRepeatingPairs(iitaResponseData["implications"]);
+            console.log(implications);
+            // Create KSTRelations
+            await Promise.all(implications.map(async (implication) => {
+                const relation = new KSTRelation();
+                relation.knowledgeSpace = knowledgeSpace;
+                relation.source = nodes[implication[0]].key;
+                relation.target = nodes[implication[1]].key;
+                await this.kstRelationService.save(relation);
+            }));
             
         } catch (error) {
             console.error('Error connecting to Flask API:', error);
         }
+    }
+
+    private eliminateRepeatingPairs(input: number[][]): number[][] {
+        const result: { [key: string]: boolean } = {};
+    
+        for (const pair of input) {
+            const key = pair.join(',');
+            const reversedKey = pair.slice().reverse().join(',');
+
+            // Check if the pair or its reverse has been seen before
+            if (!result[key] && !result[reversedKey]) {
+                result[key] = true;
+            } else {
+                if (key in result) 
+                    delete result[key];
+                if (reversedKey in result)
+                    delete result[reversedKey];     
+            }
+        }
+    
+        const resultList: number[][] = Object.keys(result).map(key => {
+            const [first, second] = key.split(',').map(Number);
+            return [first, second];
+        });
+
+        return resultList;
     }
 
     private async checkStudentAnswer(test_id: number, data: CreateStudentAnswerRequest) {
