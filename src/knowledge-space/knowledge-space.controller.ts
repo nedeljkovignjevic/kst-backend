@@ -15,6 +15,13 @@ export class KnowledgeSpaceController {
         return await this.knowledgeSpaceService.getAllKnowledgeSpaces();
     }
 
+    // @Get('/make-ontology')
+    // async exportToOWL(@Res() res: Response) {
+    //     return "";
+    //     //return owlDocument;
+    // }
+    
+
 
     @Post('/')
     async createKnowledgeSpace(@Body() data: CreateKnowledgeSpaceDTO): Promise<KnowledgeSpace> {

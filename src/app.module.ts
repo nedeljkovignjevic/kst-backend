@@ -19,6 +19,7 @@ import { KstNodeModule } from './kst-node/kst-node.module';
 import { KstRelationModule } from './kst-relation/kst-relation.module';
 import { KnowledgeSpaceModule } from './knowledge-space/knowledge-space.module';
 
+import { VirtuosoModule } from './knowledge-space/virtuoso/virtuoso.module';
 
 @Module({
   imports: [
@@ -45,7 +46,8 @@ import { KnowledgeSpaceModule } from './knowledge-space/knowledge-space.module';
     SeedModule, 
     KstNodeModule, 
     KstRelationModule, 
-    KnowledgeSpaceModule
+    KnowledgeSpaceModule,
+    VirtuosoModule
   ],
 })
 export class AppModule {}
