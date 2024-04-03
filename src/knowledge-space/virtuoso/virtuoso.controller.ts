@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post, Body } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { VirtuosoService } from './virtuoso.service';
 
@@ -9,5 +9,10 @@ export class VirtuosoController {
   @Get('/')
   async getAllGraphs() {
     return await this.virtuosoService.getAllGraphs();
+  }
+
+  @Post('/')
+  async insertGraphData(@Body() graphData){
+    return await this.virtuosoService.insertGraphData(graphData);
   }
 }

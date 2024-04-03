@@ -94,4 +94,103 @@ export class VirtuosoService {
       throw error;
     }
   }
+
+  // Virtuoso ima interni bug
+  // Bugfix koji je leader openview rekao na forumima je u isql da se 
+  // execute ova komanda: DB.DBA.RDF_DEFAULT_USER_PERMS_SET ('nobody', 7);
+  async insertGraphData(graphData) {
+    const sparqlEndpoint = 'http://host.docker.internal:8890/sparql';
+    console.log('insertGraphData called with:', graphData);
+
+    for (const graph of graphData) {
+      let query = `
+        PREFIX : <http://localhost:8890/graphs#>
+        INSERT DATA {
+          GRAPH <http://localhost:8890/graphs#${graph.id}> {
+            :${graph.id} a :Graph ;
+                :graphId "${graph.id}" ;
+                :graphName "${graph.graphName}" ;
+                :graphDescription "${graph.graphDescription}" .
+      `;
+
+      for (const concept of graph.concepts) {
+        query += `
+            :${concept.id} a :Concept ;
+                :conceptId "${concept.id}" ;
+                :concept "${concept.concept}" ;
+                :key "${concept.key}" ;
+                :x "${concept.x}"^^xsd:float ;
+                :y "${concept.y}"^^xsd:float .
+            :${graph.id} :hasConcept :${concept.id} .
+        `;
+      }
+
+      for (const link of graph.links) {
+        query += `
+            :${link.id} a :Link ;
+                :linkId "${link.id}" ;
+                :source :${link.source} ;
+                :target :${link.target} .
+            :${graph.id} :hasLink :${link.id} .
+        `;
+      }
+
+      query += '  } }';
+
+      try {
+        const response = await lastValueFrom(this.httpService.post(sparqlEndpoint, query, {
+          headers: { 'Content-Type': 'application/sparql-query' },
+        }));
+
+        console.log('Insert response:', response.data);
+        return response.data;
+      } catch (error) {
+        console.error('Error inserting data:', error);
+        throw error;
+      }
+    }
+}
+
+  
+  private createSparqlInsertQuery(graphData) {
+    const graphBaseUri = "http://localhost:8890/graphs#";
+  
+    let query = `
+    PREFIX : <${graphBaseUri}>
+    INSERT DATA {`;
+  
+    for (const graph of graphData) {
+      query += `
+      :${graph.id} a :Graph ;
+              :graphId "${graph.id}" ;
+              :graphName "${graph.graphName.replace(/"/g, '\\"')}" ;
+              :graphDescription "${graph.graphDescription.replace(/"/g, '\\"')}" .`;
+  
+      for (const concept of graph.concepts) {
+        query += `
+      :${concept.id} a :Concept ;
+              :conceptId "${concept.id}" ;
+              :concept "${concept.concept.replace(/"/g, '\\"')}" ;
+              :key "${concept.key}" ;
+              :x "${concept.x}"^^xsd:float ;
+              :y "${concept.y}"^^xsd:float .
+      :${graph.id} :hasConcept :${concept.id} .`;
+      }
+  
+      for (const link of graph.links) {
+        query += `
+      :${link.id} a :Link ;
+              :linkId "${link.id}" ;
+              :source :${link.source} ;
+              :target :${link.target} .
+      :${graph.id} :hasLink :${link.id} .`;
+      }
+    }
+  
+    query += `
+    }`;
+    
+    return query;
+  }
+  
 }
