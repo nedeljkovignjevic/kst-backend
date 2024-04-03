@@ -102,6 +102,11 @@ export class VirtuosoService {
     const sparqlEndpoint = 'http://host.docker.internal:8890/sparql';
     console.log('insertGraphData called with:', graphData);
 
+    // If graphData is not array make it array with one object
+    if (!Array.isArray(graphData)) {
+      graphData = [graphData]; 
+    }
+
     for (const graph of graphData) {
       let query = `
         PREFIX : <http://localhost:8890/graphs#>
@@ -149,48 +154,6 @@ export class VirtuosoService {
         throw error;
       }
     }
-}
-
-  
-  private createSparqlInsertQuery(graphData) {
-    const graphBaseUri = "http://localhost:8890/graphs#";
-  
-    let query = `
-    PREFIX : <${graphBaseUri}>
-    INSERT DATA {`;
-  
-    for (const graph of graphData) {
-      query += `
-      :${graph.id} a :Graph ;
-              :graphId "${graph.id}" ;
-              :graphName "${graph.graphName.replace(/"/g, '\\"')}" ;
-              :graphDescription "${graph.graphDescription.replace(/"/g, '\\"')}" .`;
-  
-      for (const concept of graph.concepts) {
-        query += `
-      :${concept.id} a :Concept ;
-              :conceptId "${concept.id}" ;
-              :concept "${concept.concept.replace(/"/g, '\\"')}" ;
-              :key "${concept.key}" ;
-              :x "${concept.x}"^^xsd:float ;
-              :y "${concept.y}"^^xsd:float .
-      :${graph.id} :hasConcept :${concept.id} .`;
-      }
-  
-      for (const link of graph.links) {
-        query += `
-      :${link.id} a :Link ;
-              :linkId "${link.id}" ;
-              :source :${link.source} ;
-              :target :${link.target} .
-      :${graph.id} :hasLink :${link.id} .`;
-      }
-    }
-  
-    query += `
-    }`;
-    
-    return query;
   }
-  
+
 }
