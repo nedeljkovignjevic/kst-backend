@@ -36,12 +36,25 @@ export class VirtuosoService {
       }
   
       if (binding.linkId && !graph.links.find(l => l.id === binding.linkId.value)) {
+        let sourceUuid = binding.source.value;
+        let targetUuid = binding.target.value;
+        console.log('SourceId', sourceUuid)
+        console.log('TargetId', targetUuid)
+        // Check if the value is a URI and extract the UUID part
+        if (sourceUuid.startsWith("http://")) {
+          sourceUuid = sourceUuid.split('#').pop();
+        }
+        if (targetUuid.startsWith("http://")) {
+          targetUuid = targetUuid.split('#').pop();
+        }
+        
         graph.links.push({
           id: binding.linkId.value,
-          source: binding.source.value,
-          target: binding.target.value
+          source: sourceUuid,
+          target: targetUuid
         });
       }
+
     });
   
     return Array.from(graphs.values());
@@ -88,6 +101,7 @@ export class VirtuosoService {
           headers: { Accept: 'application/sparql-results+json' },
         }),
       );
+      console.log('Reading from db: ', this.mapSparqlResultsToGraph(response.data.results.bindings));
       return this.mapSparqlResultsToGraph(response.data.results.bindings);
     } catch (error) {
       console.error(error);
@@ -100,6 +114,11 @@ export class VirtuosoService {
   // execute ova komanda: DB.DBA.RDF_DEFAULT_USER_PERMS_SET ('nobody', 7);
   async insertGraphData(graphData) {
     const sparqlEndpoint = 'http://host.docker.internal:8890/sparql';
+    for (let concept of graphData.concepts) {
+      const min = Math.ceil(1);
+      const max = Math.floor(999999);
+      concept.id = Math.floor(Math.random() * (max - min + 1)) + min;
+    }
     console.log('insertGraphData called with:', graphData);
 
     // If graphData is not array make it array with one object
@@ -117,7 +136,7 @@ export class VirtuosoService {
                 :graphName "${graph.graphName}" ;
                 :graphDescription "${graph.graphDescription}" .
       `;
-
+  
       for (const concept of graph.concepts) {
         query += `
             :${concept.id} a :Concept ;
@@ -129,18 +148,23 @@ export class VirtuosoService {
             :${graph.id} :hasConcept :${concept.id} .
         `;
       }
-
+  
       for (const link of graph.links) {
-        query += `
+        if (link.source && link.target) {
+          query += `
             :${link.id} a :Link ;
                 :linkId "${link.id}" ;
-                :source :${link.source} ;
-                :target :${link.target} .
+                :source "${link.source}"^^xsd:string ;
+                :target "${link.target}"^^xsd:string .
             :${graph.id} :hasLink :${link.id} .
-        `;
+          `;
+        } else {
+          console.log('One of the links is undefined or empty.');
+        }
       }
-
+      
       query += '  } }';
+      console.log('Final query is: ', query)
 
       try {
         const response = await lastValueFrom(this.httpService.post(sparqlEndpoint, query, {

@@ -40,24 +40,6 @@
     
 
 
-    <!-- http://localhost:8890/graphs#hasSource -->
-
-    <owl:ObjectProperty rdf:about="http://localhost:8890/graphs#hasSource">
-        <rdfs:domain rdf:resource="http://localhost:8890/graphs#Concept"/>
-        <rdfs:range rdf:resource="http://localhost:8890/graphs#Concept"/>
-    </owl:ObjectProperty>
-    
-
-
-    <!-- http://localhost:8890/graphs#hasTarget -->
-
-    <owl:ObjectProperty rdf:about="http://localhost:8890/graphs#hasTarget">
-        <rdfs:domain rdf:resource="http://localhost:8890/graphs#Concept"/>
-        <rdfs:range rdf:resource="http://localhost:8890/graphs#Concept"/>
-    </owl:ObjectProperty>
-    
-
-
     <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
     //
@@ -252,8 +234,6 @@
 
     <owl:NamedIndividual rdf:about="http://localhost:8890/graphs#link1">
         <rdf:type rdf:resource="http://localhost:8890/graphs#Link"/>
-        <graphs:hasSource rdf:resource="http://localhost:8890/graphs#concept1"/>
-        <graphs:hasTarget rdf:resource="http://localhost:8890/graphs#concept2"/>
         <graphs:linkId rdf:datatype="http://www.w3.org/2001/XMLSchema#int">77222</graphs:linkId>
         <graphs:source>fc4f8405-7623-4f8f-9bb5-f7141d98dbec</graphs:source>
         <graphs:target>c585ac3e-30d1-4abe-a7d7-f62316fd5908</graphs:target>
